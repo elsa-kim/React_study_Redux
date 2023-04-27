@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# 리덕스를 사용해 리액트 애플리케이션 상태 관리
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## UI 준비하기
 
-## Available Scripts
+### 프레젠테이셔널 컴포넌트와 컨테이너 컴포넌트 분리 패턴
 
-In the project directory, you can run:
+- 리액트 프로젝트에서 리덕스 사용 시 가장 많이 사용하는 패턴
+- 프레젠테이셔널 컴포넌트 : 상태 관리 이뤄지지 않고 props 받아와 화면에 UI 보여주기만 하는 컴포넌트, src/components 경로에 저장
+- 컨테이너 컴포넌트 : 리덕스와 연동되어 있는 컴포넌트로, 리덕스로부터 상태 받아오기도 하고 리덕스 스토어에 액션 디스패피 하기도 함, src/containers 컴포넌트에 작성
+- 해당 패턴 사용시 코드의 재사용성 높아지고 관심사의 분리가 이뤄져 UI 작성할 때 집중가능
 
-### `yarn start`
+## 리덕스 관련 코드 작성하기
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 액션 타입, 액션 생성 함수, 리듀서 코드 작성 -> 각각 다른 파일에 작성 or 기능별로 묶어 파일 하나에 작성
+  - actions, contants, reducers 세 디렉터리 만들고 기능별로 파일 하나씩 : 리덕스 공식 문서에 사용되는 기본적 방식이지만 새로운 액션 만들 때마다 세 종류의 파일 모두 수정해 불편할 수 있음
+  - 기능별로 파일 하나에 몰아서 작성 : Ducks 패턴이라고 부름
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 모듈 작성
 
-### `yarn test`
+모듈 : Ducks 패턴 사용해 액션 타입, 액션 생성 함수, 리듀서 작성한 코드
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. 액션 타입 정의
+   - 액션 타입은 대문자로 정의, 문자열 내용은 '모듈이름/액션이름' 형태로 작성(액션 이름 충돌되지 않도록)
+2. 액션 생성 함수 만들기
+   - 앞부분에 export 키워드 들어감 : 추후 해당 함수를 다른 파일에서 불러와 사용 가능
+3. 초기 상태 및 리듀서 함수 만들기
+   - 리듀서는 export default로 내보내줌
+     ; export는 여러개 내보낼 수 있지만 export default는 단 한개만 가능, 불러오는 방식도 다름(export는 {} 안, export default는 그냥 적어줌
 
-### `yarn build`
+### 루트 리듀서 만들기
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- createStore 함수 사용해 스토어 만들때는 리듀서 하나만 사용해야 하기때문에 기존에 만든 리듀서를 하나로 합쳐줘야 함
+- 리덕스에서 제공하는 combineReducers 유틸 함수 사용
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 리액트 애플리케이션에 리덕스 적용
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+스토어 만들고 리액트 애플리케이션에 리덕스 적용하는 작업은 src 디렉터리의 index.js에서 이뤄짐
